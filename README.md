@@ -4,9 +4,7 @@
 
 This repository contains the official implementation of the paper:
 
-[**Redefining non-IID Data in Federated Learning for Computer Vision Tasks: Migrating from Labels to Embeddings for Task-Specific Data Distributions**](https://doi.org/10.48550/arXiv.2503.14553)\
-Kasra Borazjani, Payam Abdisarabshali, Naji Khosravan, Seyyedali Hosseinalipour\
-ArXiv Preprint, 2025
+**Redefining non-IID Data in Federated Learning for Computer Vision Tasks: Migrating from Labels to Embeddings for Task-Specific Data Distributions**\
 
 Federated Learning (FL) enables decentralized model training while preserving data privacy, but its performance is significantly impacted by the **non-IID nature** of data across clients. Traditionally, non-IID settings in FL have been defined based on **label distribution skew**. However, in this work, we demonstrate that this definition oversimplifies real-world heterogeneity, particularly in computer vision tasks beyond classification.
 
@@ -117,19 +115,4 @@ python test_fed.py \
 ```
 
 We recommend using a `--init_lr` of 1e-5 for the classification task and 1e-1 for all the other tasks. Also, depending on the dataset and configuration, training time may vary. We recommend using a **GPU-enabled environment** for optimal performance. To do so, you can add the `--use_accelerator True` argument to the commands to run each script when applicable.
-
-
-## 📜 Citation
-
-If you find this work useful, please consider citing:
-
-```bibtex
-@article{borazjani25redefining,
-  author = {Kasra Borazjani, Payam Abdisarabshali, Naji Khosravan, Seyyedali Hosseinalipour},
-  title = {Redefining non-IID Data in Federated Learning for Computer Vision Tasks: Migrating from Labels to Embeddings for Task-Specific Data Distributions},
-  journal = {ArXiv Preprint},
-  year = {2025},
-  doi = {https://doi.org/10.48550/arXiv.2503.14553}
-}
-```
 
