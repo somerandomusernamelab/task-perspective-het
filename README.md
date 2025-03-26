@@ -4,7 +4,7 @@
 
 This repository contains the official implementation of the paper:
 
-**Redefining non-IID Data in Federated Learning for Computer Vision Tasks: Migrating from Labels to Embeddings for Task-Specific Data Distributions**\
+[**Redefining non-IID Data in Federated Learning for Computer Vision Tasks: Migrating from Labels to Embeddings for Task-Specific Data Distributions**](https://doi.org/10.48550/arXiv.2503.14553)\
 Kasra Borazjani, Payam Abdisarabshali, Naji Khosravan, Seyyedali Hosseinalipour\
 ArXiv Preprint, 2025
 
@@ -60,7 +60,7 @@ pip install git+https://github.com/openai/CLIP.git
 
 
 
-### Dataset
+## 📊 Dataset
 
 We have used the Taskonomy dataset in our experiments. To see how to download the dataset, please refer to the manual available [here](https://github.com/StanfordVL/taskonomy/tree/master/data). You can also use the alternative sample we have provided below to recreate our results:
 
@@ -79,23 +79,45 @@ omnitools.download rgb normal class_scene keypoints3d depth_euclidean reshading 
 
 ## 🏋️ Training
 
-To train the centralized models, run:
+To manually train the models, you should start with exporting the scenes from the Taskonomy dataset that are going to be used to train both the centralized and the federated models. To do so, you should run the following script:
 
 ```bash
-python main.py --config configs/config.yaml
+python extract_datapoints_for_experiments.py\
+    --client_file_name <name of the csv file> \
+    --data_path <path to downloaded data> \
+    --taskonomy_clients_to_include <number of scenes from taskonomy to include> \
+    --scene_class_file_name <name of the scene class file>
 ```
 
-Depending on the dataset and configuration, training time may vary. We recommend using a **GPU-enabled environment** for optimal performance.
+The `client_file_name` argument points to the name of the csv file that includes the name of the scenes inside the taskonomy subset downloaded (tiny/medium/full/fullplus) which can be accessed [here](https://github.com/StanfordVL/taskonomy/raw/master/data/assets/splits_taskonomy.zip). The `taskonomy_clients_to_include` refers to the number of scenes which are going to be used in the experiments. We have used the first _three_ scenes in our experiments. The `scene_class_file_name` is referring to the label-encoded scene class labels which is included in this repository for reference as `places_class_names.txt`. However, it should be moved into the folder that the data is in (e.g, the `./taskonomy_dataset/` folder if you have used the exact code as provided to download the dataset).
 
-## 📊 Evaluation
-
-Run the evaluation script to reproduce results:
+To train the centralized models, run the following code:
 
 ```bash
-python evaluate.py --model_path path/to/checkpoint
+python train_centralized_task_model.py \
+--task <task_name> --n_epochs <number_of_epochs> --batch_size <batch_size> --use_accelerator True --init_lr 1e-2 --data_path <path_to_dataset>
 ```
 
-Ensure that the model checkpoint is correctly specified in the argument. Evaluation results, including **accuracy, loss trends, and task-specific performance metrics**, will be logged and saved.
+After training the centralized models, you should extract the embeddings and cluster them using the following code
+
+```bash
+python extract_embeddings.py \
+--task <task_name> --n_clusters <number_of_clusters> \
+--observe_performance True --from_checkpoint True \
+--load_model_dir <path_to_checkpoint>
+```
+
+You can then test the FL performance using the code
+
+```bash
+python test_fed.py \
+--alpha <alpha> --task <task_name> --n_rounds <number_of_global_rounds> --n_clusters <number_of_clusters> --type <embedding_based/class_based> \
+--n_clients <number_of_clients> --sgd_per_epoch <number_of_sgd_per_global_round> \
+--init_lr <initial_learning_rate> --assignment_files_path <path_to_assignment_file>
+```
+
+We recommend using a `--init_lr` of 1e-5 for the classification task and 1e-1 for all the other tasks. Also, depending on the dataset and configuration, training time may vary. We recommend using a **GPU-enabled environment** for optimal performance. To do so, you can add the `--use_accelerator True` argument to the commands to run each script when applicable.
+
 
 ## 📜 Citation
 
@@ -110,12 +132,4 @@ If you find this work useful, please consider citing:
   doi = {https://doi.org/10.48550/arXiv.2503.14553}
 }
 ```
-
-## 📌 Contact
-
-For questions, feel free to open an issue or contact: [Your Email / Website / Social Media]
-
----
-
-Let me know if any other details need to be adjusted!
 
