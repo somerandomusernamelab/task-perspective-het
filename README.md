@@ -4,7 +4,7 @@
 
 This repository contains the official implementation of the paper:
 
-**Redefining non-IID Data in Federated Learning for Computer Vision Tasks: Migrating from Labels to Embeddings for Task-Specific Data Distributions**\
+**Redefining non-IID Data in Federated Learning for Computer Vision Tasks: Migrating from Labels to Embeddings for Task-Specific Data Distributions**
 
 Federated Learning (FL) enables decentralized model training while preserving data privacy, but its performance is significantly impacted by the **non-IID nature** of data across clients. Traditionally, non-IID settings in FL have been defined based on **label distribution skew**. However, in this work, we demonstrate that this definition oversimplifies real-world heterogeneity, particularly in computer vision tasks beyond classification.
 
